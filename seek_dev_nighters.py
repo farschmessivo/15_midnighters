@@ -5,11 +5,11 @@ from collections import Counter
 
 
 def load_raw_data(page_number):
-    params = {'page': str(page_number)}
+    params = {'page': page_number}
     raw_data_request = requests.get(
         'http://devman.org/api/challenges/solution_attempts/', params)
-    raw_data = raw_data_request.json()
-    return raw_data
+    json_data = raw_data_request.json()
+    return json_data
 
 
 def load_solution_attempts(data_loader):
