@@ -4,7 +4,7 @@ import datetime
 from collections import Counter
 
 
-def load_raw_data(page_number):
+def load_api_data(page_number):
     params = {'page': page_number}
     raw_data_request = requests.get(
         'http://devman.org/api/challenges/solution_attempts/', params)
@@ -27,20 +27,15 @@ def load_solution_attempts(data_loader):
 
 
 def calc_midnighters_top_list(midnight_attempts_usernames):
-    midnight_attempts_counter = Counter(midnight_attempts_usernames)
-    midnighters_top_list = sorted(midnight_attempts_counter.items(),
-                                  key=lambda item: item[1],
-                                  reverse=True)
+    midnighters_top_list = Counter(midnight_attempts_usernames).most_common(20)
+
     return midnighters_top_list
 
 
 def is_midnight_attempt(attempt):
     local_timezone = pytz.timezone(attempt['timezone'])
-    attempt_dt_utc = datetime.datetime.fromtimestamp(attempt['timestamp'],
-                                                     pytz.utc)
-    attempt_dt_loc = attempt_dt_utc.astimezone(local_timezone)
+    attempt_dt_loc = datetime.datetime.fromtimestamp(attempt['timestamp'], local_timezone)
     local_time = attempt_dt_loc.time()
-
     lower_bound = datetime.time(0, 0, 0)
     upper_bound = datetime.time(4, 0, 0)
 
@@ -61,9 +56,9 @@ def print_to_console(midnighters_top_list):
             index, username, num_of_midnight_attempts))
 
 if __name__ == '__main__':
-    solution_attempts = load_solution_attempts(load_raw_data)
+    solution_attempts_list = load_solution_attempts(load_api_data)
     midnight_attempts_usernames = get_midnight_attempts_usernames(
-        solution_attempts, is_midnight_attempt)
+        solution_attempts_list, is_midnight_attempt)
     midnighters_top_list = calc_midnighters_top_list(
         midnight_attempts_usernames)
     print_to_console(midnighters_top_list)
