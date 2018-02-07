@@ -27,16 +27,18 @@ def load_solution_attempts(data_loader):
 
 
 def calc_midnighters_top_list(midnight_attempts_usernames):
-    midnighters_top_list = Counter(midnight_attempts_usernames).most_common()
+    midnighters_top_list = Counter(midnight_attempts_usernames).most_common(3)
 
     return midnighters_top_list
 
 
 def is_midnight_attempt(attempt):
     local_timezone = pytz.timezone(attempt['timezone'])
-    attempt_localized_datetime = datetime.datetime.fromtimestamp(attempt['timestamp'],
+    attempt_dt_loc = datetime.datetime.fromtimestamp(attempt['timestamp'],
                                                      local_timezone)
-    local_time = attempt_localized_datetime.time()
+    print(attempt_dt_loc)
+    local_time = attempt_dt_loc.time()
+    print(local_time)
     lower_bound = datetime.time(0, 0, 0)
     upper_bound = datetime.time(4, 0, 0)
 
