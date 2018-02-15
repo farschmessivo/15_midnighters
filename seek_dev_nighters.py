@@ -25,7 +25,7 @@ def load_solution_attempts(data_loader):
             break
 
 
-def calc_midnighters_top_list(midnight_attempts_usernames):
+def show_midnighters_top_list(midnight_attempts_usernames):
     midnighters_top_list = Counter(midnight_attempts_usernames).most_common()
     return midnighters_top_list
 
@@ -37,10 +37,8 @@ def is_midnight_attempt(attempt):
         local_timezone
     )
     local_time = attempt_localized_datetime.time()
-    lower_bound = datetime.time(0, 0, 0)
-    upper_bound = datetime.time(4, 0, 0)
 
-    return lower_bound <= local_time < upper_bound
+    return 0 <= local_time.hour < 4
 
 
 def get_filtered_attempts_usernames(solution_attempts, filter_function):
@@ -66,6 +64,6 @@ if __name__ == '__main__':
     solution_attempts_list = load_solution_attempts(load_api_data)
     midnight_attempts_usernames = get_filtered_attempts_usernames(
         solution_attempts_list, is_midnight_attempt)
-    midnighters_top_list = calc_midnighters_top_list(
+    midnighters_top_list = show_midnighters_top_list(
         midnight_attempts_usernames)
     print_to_console(midnighters_top_list)
