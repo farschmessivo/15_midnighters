@@ -44,7 +44,7 @@ def is_midnight_attempt(attempt, night_start, night_end):
 def get_filtered_attempts_usernames(solution_attempts, filter_by_time_range):
     filtered_usernames = [
         attempt['username'] for attempt in solution_attempts
-        if filter_by_time_range(attempt, 0, 4)
+        if filter_by_time_range(attempt, night_start=0, night_end=4)
     ]
     return filtered_usernames
 
