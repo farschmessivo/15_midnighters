@@ -25,12 +25,12 @@ def load_solution_attempts(data_loader):
             break
 
 
-def show_midnighters_top_list(midnight_attempts_usernames):
+def get_midnighters_top_list(midnight_attempts_usernames):
     midnighters_top_list = Counter(midnight_attempts_usernames).most_common()
     return midnighters_top_list
 
 
-def is_midnight_attempt(attempt):
+def is_midnight_attempt(attempt, night_start, night_end):
     local_timezone = pytz.timezone(attempt['timezone'])
     attempt_localized_datetime = datetime.datetime.fromtimestamp(
         attempt['timestamp'],
@@ -38,13 +38,13 @@ def is_midnight_attempt(attempt):
     )
     local_time = attempt_localized_datetime.time()
 
-    return 0 <= local_time.hour < 4
+    return night_start <= local_time.hour < night_end
 
 
-def get_filtered_attempts_usernames(solution_attempts, filter_function):
+def get_filtered_attempts_usernames(solution_attempts, filter_by_time_range):
     filtered_usernames = [
         attempt['username'] for attempt in solution_attempts
-        if filter_function(attempt)
+        if filter_by_time_range(attempt, 0, 4)
     ]
     return filtered_usernames
 
@@ -64,6 +64,6 @@ if __name__ == '__main__':
     solution_attempts_list = load_solution_attempts(load_api_data)
     midnight_attempts_usernames = get_filtered_attempts_usernames(
         solution_attempts_list, is_midnight_attempt)
-    midnighters_top_list = show_midnighters_top_list(
+    midnighters_top_list = get_midnighters_top_list(
         midnight_attempts_usernames)
     print_to_console(midnighters_top_list)
